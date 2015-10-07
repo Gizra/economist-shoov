@@ -21,17 +21,6 @@ var capsConfig = {
     'os' : 'Windows',
     'os_version' : '7',
     'resolution' : '1024x768'
-  },
-  'iphone5': {
-    'browser' : 'Chrome',
-    'browser_version' : '42.0',
-    'os' : 'OS X',
-    'os_version' : 'Yosemite',
-    'chromeOptions': {
-      'mobileEmulation': {
-        'deviceName': 'Apple iPhone 5'
-      }
-    }
   }
 };
 
@@ -61,12 +50,35 @@ describe('Visual monitor testing', function() {
   it('should show the home page',function(done) {
     client
       .url(baseUrl)
+      .setCookie({name: 'ec-overlay-close', value: '1'})
       .webdrivercss(testName + '.homepage', {
         name: '1',
-        exclude: [],
-        remove: [],
-        hide: [],
-        screenWidth: selectedCaps == 'chrome' ? [640, 960, 1200] : undefined,
+        exclude:
+          [
+            // Subscription offer.
+            '#gpt_pencil_slug_ad',
+            // The Economist Espresso app and digital editions img.
+            '.digitalchinamodule h2',
+            '.digitalespressomodule h2',
+            '.digitalproductimage',
+            '.digitalthirdrow',
+          ],
+        remove:
+          [
+            // Top ad.
+            '#block-ec_ads-leaderboard_ad',
+            '.usabilla_live_button_container',
+            '#ec-cookie-messages-container',
+          ],
+        hide:
+          [
+            // The Economist Espresso app and digital editions text.
+            '.digitalchinamodule h3',
+            '.digitalchinamodule p',
+            '.digitalespressomodule h3',
+            '.digitalespressomodule p',
+          ],
+        screenWidth: selectedCaps == 'chrome' ? [960] : undefined,
       }, resultsCallback)
       .call(done);
   });
